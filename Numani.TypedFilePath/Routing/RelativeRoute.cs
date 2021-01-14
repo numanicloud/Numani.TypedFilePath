@@ -2,19 +2,26 @@
 
 namespace Numani.TypedFilePath.Routing
 {
-	class RelativeRoute : IRouting
+	internal class RelativeRoute : RoutingBase
 	{
-		IFilePath IRouting.GetFilePath(string pathString)
+		private static RelativeRoute? _instance;
+		public static RelativeRoute Instance => _instance ??= new RelativeRoute();
+
+		private RelativeRoute()
+		{
+		}
+
+		public override IRelativeFilePath GetFilePath(string pathString)
 		{
 			return new RelativeFilePath(pathString);
 		}
 
-		IFilePathWithExtension IRouting.GetFilePathWithExtension(string pathBase, FileExtension extension)
+		public override IRelativeFilePathExt GetFilePathWithExtension(string pathBase, FileExtension extension)
 		{
 			return new RelativeFilePathExt(pathBase, extension);
 		}
 
-		IDirectoryPath IRouting.GetDirectoryPath(string pathString)
+		public override IRelativeDirectoryPath GetDirectoryPath(string pathString)
 		{
 			return new RelativeDirectoryPath(pathString);
 		}

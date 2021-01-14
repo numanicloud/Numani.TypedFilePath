@@ -7,6 +7,6 @@ namespace Numani.TypedFilePath.Interfaces
 		string PathBase { get; }
 		FileExtension Extension { get; }
 
-		public IFilePath RemoveExtension() => Extensions.AsFilePath(PathBase);
+		public IFilePath RemoveExtension() => TypedPath.AsFilePath(PathBase);
 	}
 }

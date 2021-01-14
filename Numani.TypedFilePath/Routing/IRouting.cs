@@ -2,10 +2,10 @@
 
 namespace Numani.TypedFilePath.Routing
 {
-	public interface IRouting
+	public abstract class RoutingBase
 	{
-		IFilePath GetFilePath(string pathString);
-		IFilePathWithExtension GetFilePathWithExtension(string pathString, FileExtension extension);
-		IDirectoryPath GetDirectoryPath(string pathString);
+		public abstract IFilePath GetFilePath(string pathString);
+		public abstract IFilePathWithExtension GetFilePathWithExtension(string pathString, FileExtension extension);
+		public abstract IDirectoryPath GetDirectoryPath(string pathString);
 	}
 }

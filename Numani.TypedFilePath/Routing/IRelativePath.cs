@@ -4,6 +4,7 @@ namespace Numani.TypedFilePath.Routing
 {
 	public interface IRelativePath : IFileSystemPath
 	{
-		IRouting IFileSystemPath.RoutingInfo => new RelativeRoute();
+		RoutingBase IFileSystemPath.RoutingBaseInfo => RelativeRoute.Instance;
+		internal RelativeRoute RelativeRoute => RelativeRoute.Instance;
 	}
 }

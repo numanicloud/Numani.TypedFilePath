@@ -11,7 +11,7 @@ namespace Numani.TypedFilePath.Interfaces
 
 		public IFilePathWithExtension WithExtension(FileExtension extension)
 		{
-			return RoutingInfo.GetFilePathWithExtension(PathString, extension);
+			return RoutingBaseInfo.GetFilePathWithExtension(PathString, extension);
 		}
 	}
 }

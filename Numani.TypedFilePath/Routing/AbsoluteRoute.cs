@@ -2,19 +2,26 @@
 
 namespace Numani.TypedFilePath.Routing
 {
-	class AbsoluteRoute : IRouting
+	internal class AbsoluteRoute : RoutingBase
 	{
-		IFilePath IRouting.GetFilePath(string pathString)
+		private static AbsoluteRoute? _instance;
+		public static AbsoluteRoute Instance => _instance ??= new AbsoluteRoute();
+
+		private AbsoluteRoute()
+		{
+		}
+
+		public override IAbsoluteFilePath GetFilePath(string pathString)
 		{
 			return new AbsoluteFilePath(pathString);
 		}
 
-		IFilePathWithExtension IRouting.GetFilePathWithExtension(string pathString, FileExtension extension)
+		public override IAbsoluteFilePathExt GetFilePathWithExtension(string pathString, FileExtension extension)
 		{
 			return new AbsoluteFilePathExt(pathString, extension);
 		}
 
-		IDirectoryPath IRouting.GetDirectoryPath(string pathString)
+		public override IAbsoluteDirectoryPath GetDirectoryPath(string pathString)
 		{
 			return new AbsoluteDirectoryPath(pathString);
 		}
