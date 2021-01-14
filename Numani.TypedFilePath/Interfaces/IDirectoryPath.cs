@@ -6,6 +6,8 @@ namespace Numani.TypedFilePath.Interfaces
 {
 	public interface IDirectoryPath : IFileSystemPath
 	{
+		public string PathStringWithTrailingSlash => PathString + Path.DirectorySeparatorChar;
+
 		public bool Exists() => Directory.Exists(PathString);
 		public DirectoryInfo Create() => Directory.CreateDirectory(PathString);
 		public DirectoryInfo GetInfo() => new DirectoryInfo(PathString);
@@ -13,7 +15,7 @@ namespace Numani.TypedFilePath.Interfaces
 		public IEnumerable<IFilePath> EnumerateFiles()
 		{
 			return Directory.EnumerateFiles(PathString)
-				.Select(path => TypedPath.AsFilePath(path, RoutingBaseInfo));
+				.Select(path => path.AsFilePath(RoutingBaseInfo));
 		}
 	}
 }
