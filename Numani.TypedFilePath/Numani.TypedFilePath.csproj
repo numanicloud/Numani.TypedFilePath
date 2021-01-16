@@ -6,4 +6,10 @@
     <Nullable>Enable</Nullable>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PackageId>Numani.TypedFilePath</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>NumAniCloud</Authors>
+  </PropertyGroup>
+
 </Project>

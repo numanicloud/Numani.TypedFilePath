@@ -28,9 +28,9 @@ namespace Numani.TypedFilePath
 			{
 				return routingBase.GetFilePath(pathString);
 			}
-
-			var baseName = Path.GetFileNameWithoutExtension(pathString);
+			
 			var ext = new FileExtension(Path.GetExtension(pathString));
+			var baseName = pathString.Replace(ext.WithDot, "");
 			return routingBase.GetFilePathWithExtension(baseName, ext);
 		}
 
