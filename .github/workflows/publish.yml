@@ -22,4 +22,5 @@ jobs:
         uses: rohith/publish-nuget@v2
         with:
           PROJECT_FILE_PATH: Numani.TypedFilePath/Numani.TypedFilePath.csproj
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           INCLUDE_SYMBOLS: false # optional
