@@ -10,11 +10,11 @@ namespace Numani.TypedFilePath.Interfaces
 	{
 	}
 
-	public interface IRelativeFilePathExt : IFilePathWithExtension, IRelativePath
+	public interface IRelativeFilePathExt : IFilePathWithExtension, IRelativeFilePath
 	{
 	}
 
-	public interface IAbsoluteFilePathExt : IFilePathWithExtension, IAbsolutePath
+	public interface IAbsoluteFilePathExt : IFilePathWithExtension, IAbsoluteFilePath
 	{
 	}
 

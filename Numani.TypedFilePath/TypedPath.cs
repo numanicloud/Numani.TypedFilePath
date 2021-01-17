@@ -5,18 +5,18 @@ using Numani.TypedFilePath.Routing;
 
 namespace Numani.TypedFilePath
 {
-	public static class TypedPath
+	public static partial class TypedPath
 	{
 		public static IFilePath AsFilePath(this string pathString)
 		{
-			RoutingBase routingBase = Path.IsPathRooted(pathString)
-				? AbsoluteRoute.Instance
-				: RelativeRoute.Instance;
-
-			return AsFilePath(pathString, routingBase);
+			return Path.IsPathRooted(pathString)
+				? AsFilePath(pathString, AbsoluteRoute.Instance)
+				: AsFilePath(pathString, RelativeRoute.Instance);
 		}
 
-		public static IFilePath AsFilePath(this string pathString, RoutingBase routingBase)
+		private static TFile AsFilePath<TFile>(this string pathString,
+			Func<TFile> noExt,
+			Func<FileExtension, TFile> withExt)
 		{
 			// パス末尾のスラッシュなどがあれば、それを外したものをファイルパスとして扱う
 			if (Path.EndsInDirectorySeparator(pathString))
@@ -26,12 +26,32 @@ namespace Numani.TypedFilePath
 
 			if (!Path.HasExtension(pathString))
 			{
-				return routingBase.GetFilePath(pathString);
+				return noExt();
 			}
 			
 			var ext = new FileExtension(Path.GetExtension(pathString));
 			var baseName = pathString.Replace(ext.WithDot, "");
-			return routingBase.GetFilePathWithExtension(baseName, ext);
+			return withExt(ext);
+		}
+		internal static IFilePath AsFilePath(this string pathString, RoutingBase routingBase)
+		{
+			return AsFilePath(pathString,
+				() => routingBase.GetFilePath(pathString),
+				ext => routingBase.GetFilePathWithExtension(pathString, ext));
+		}
+
+		internal static IRelativeFilePath AsFilePath(this string pathString, RelativeRoute routingBase)
+		{
+			return AsFilePath(pathString,
+				() => routingBase.GetFilePath(pathString),
+				ext => routingBase.GetFilePathWithExtension(pathString, ext));
+		}
+
+		internal static IAbsoluteFilePath AsFilePath(this string pathString, AbsoluteRoute routingBase)
+		{
+			return AsFilePath(pathString,
+				() => routingBase.GetFilePath(pathString),
+				ext => routingBase.GetFilePathWithExtension(pathString, ext));
 		}
 
 		public static IDirectoryPath AsDirectoryPath(this string pathString)
@@ -62,47 +82,6 @@ namespace Numani.TypedFilePath
 		{
 			var path = Directory.GetCurrentDirectory();
 			return new AbsoluteDirectoryPath(path);
-		}
-
-
-		public static IAbsoluteFilePath Combine(this IAbsoluteDirectoryPath dir, IRelativeFilePath file)
-		{
-			return Combine(dir, file, dir.AbsoluteRoute.GetFilePath);
-		}
-
-		public static IAbsoluteFilePathExt Combine(this IAbsoluteDirectoryPath dir, IRelativeFilePathExt file)
-		{
-			return CombineExt(dir, file, dir.AbsoluteRoute.GetFilePathWithExtension);
-		}
-
-		public static IAbsoluteDirectoryPath Combine(this IAbsoluteDirectoryPath dir, IRelativeDirectoryPath dir2)
-		{
-			return Combine(dir, dir2, dir.AbsoluteRoute.GetDirectoryPath);
-		}
-
-		public static IRelativeFilePath Combine(this IRelativeDirectoryPath dir, IRelativeFilePath file)
-		{
-			return Combine(dir, file, dir.RelativeRoute.GetFilePath);
-		}
-
-		public static IRelativeFilePathExt Combine(this IRelativeDirectoryPath dir, IRelativeFilePathExt file)
-		{
-			return CombineExt(dir, file, dir.RelativeRoute.GetFilePathWithExtension);
-		}
-
-		public static IRelativeDirectoryPath Combine(this IRelativeDirectoryPath dir, IRelativeDirectoryPath dir2)
-		{
-			return Combine(dir, dir2, dir.RelativeRoute.GetDirectoryPath);
-		}
-
-		private static T Combine<T>(IFileSystemPath path1, IFileSystemPath path2, Func<string, T> builder)
-		{
-			return builder.Invoke(Path.Combine(path1.PathString, path2.PathString));
-		}
-
-		private static T CombineExt<T>(IFileSystemPath path1, IFilePathWithExtension path2, Func<string, FileExtension, T> builder)
-		{
-			return builder.Invoke(Path.Combine(path1.PathString, path2.PathBase), path2.Extension);
 		}
 	}
 }
