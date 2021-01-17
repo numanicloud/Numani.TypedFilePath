@@ -8,10 +8,5 @@ namespace Numani.TypedFilePath.Interfaces
 		public FileStream Create() => File.Create(PathString);
 		public FileStream OpenRead() => File.OpenRead(PathString);
 		public FileStream OpenWrite() => File.OpenWrite(PathString);
-
-		public IFilePathWithExtension WithExtension(FileExtension extension)
-		{
-			return RoutingBaseInfo.GetFilePathWithExtension(PathString, extension);
-		}
 	}
 }
