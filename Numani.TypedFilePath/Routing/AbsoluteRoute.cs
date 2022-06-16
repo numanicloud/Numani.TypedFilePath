@@ -11,17 +11,17 @@ namespace Numani.TypedFilePath.Routing
 		{
 		}
 
-		public override IAbsoluteFilePath GetFilePath(string pathString)
+		public override IFilePath GetFilePath(string pathString)
 		{
 			return new AbsoluteFilePath(pathString);
 		}
 
-		public override IAbsoluteFilePathExt GetFilePathWithExtension(string pathString, FileExtension extension)
+		public override IFilePathWithExtension GetFilePathWithExtension(string pathString, FileExtension extension)
 		{
 			return new AbsoluteFilePathExt(pathString, extension);
 		}
 
-		public override IAbsoluteDirectoryPath GetDirectoryPath(string pathString)
+		public override IDirectoryPath GetDirectoryPath(string pathString)
 		{
 			return new AbsoluteDirectoryPath(pathString);
 		}

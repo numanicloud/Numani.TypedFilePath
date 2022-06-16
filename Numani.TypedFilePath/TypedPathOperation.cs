@@ -8,52 +8,72 @@ namespace Numani.TypedFilePath
 	{
 		public static IAbsoluteFilePath Combine(this IAbsoluteDirectoryPath dir, IRelativeFilePath file)
 		{
-			return Combine(dir, file, dir.AbsoluteRoute.GetFilePath);
+			return Combine<IAbsoluteFilePath>(dir, file, dir.AbsoluteRoute.GetFilePath);
 		}
 
 		public static IAbsoluteFilePathExt Combine(this IAbsoluteDirectoryPath dir, IRelativeFilePathExt file)
 		{
-			return CombineExt(dir, file, dir.AbsoluteRoute.GetFilePathWithExtension);
+			return CombineExt<IAbsoluteFilePathExt>(dir, file, dir.AbsoluteRoute.GetFilePathWithExtension);
 		}
 
 		public static IAbsoluteDirectoryPath Combine(this IAbsoluteDirectoryPath dir, IRelativeDirectoryPath dir2)
 		{
-			return Combine(dir, dir2, dir.AbsoluteRoute.GetDirectoryPath);
+			return Combine<IAbsoluteDirectoryPath>(dir, dir2, dir.AbsoluteRoute.GetDirectoryPath);
 		}
 
 		public static IRelativeFilePath Combine(this IRelativeDirectoryPath dir, IRelativeFilePath file)
 		{
-			return Combine(dir, file, dir.RelativeRoute.GetFilePath);
+			return Combine<IRelativeFilePath>(dir, file, dir.RelativeRoute.GetFilePath);
 		}
 
 		public static IRelativeFilePathExt Combine(this IRelativeDirectoryPath dir, IRelativeFilePathExt file)
 		{
-			return CombineExt(dir, file, dir.RelativeRoute.GetFilePathWithExtension);
+			return CombineExt<IRelativeFilePathExt>(dir, file, dir.RelativeRoute.GetFilePathWithExtension);
 		}
 
 		public static IRelativeDirectoryPath Combine(this IRelativeDirectoryPath dir, IRelativeDirectoryPath dir2)
 		{
-			return Combine(dir, dir2, dir.RelativeRoute.GetDirectoryPath);
+			return Combine<IRelativeDirectoryPath>(dir, dir2, dir.RelativeRoute.GetDirectoryPath);
 		}
 
-		private static T Combine<T>(IFileSystemPath path1, IFileSystemPath path2, Func<string, T> builder)
+		private static T Combine<T>(IFileSystemPath path1, IFileSystemPath path2, Func<string, IFileSystemPath> builder)
 		{
-			return builder.Invoke(Path.Combine(path1.PathString, path2.PathString));
+			var result = builder.Invoke(Path.Combine(path1.PathString, path2.PathString));
+			if (result is not T specific)
+			{
+				throw new Exception();
+			}
+			return specific;
 		}
 
-		private static T CombineExt<T>(IFileSystemPath path1, IFilePathWithExtension path2, Func<string, FileExtension, T> builder)
+		private static T CombineExt<T>(IFileSystemPath path1, IFilePathWithExtension path2, Func<string, FileExtension, IFilePathWithExtension> builder)
 		{
-			return builder.Invoke(Path.Combine(path1.PathString, path2.PathBase), path2.Extension);
+			var result = builder.Invoke(Path.Combine(path1.PathString, path2.PathBase), path2.Extension);
+			if (result is not T specific)
+			{
+				throw new Exception();
+			}
+			return specific;
 		}
 
 		public static IRelativeFilePathExt WithExtension(this IRelativeFilePath path, FileExtension extension)
 		{
-			return path.RelativeRoute.GetFilePathWithExtension(path.PathString, extension);
+			var result = path.RelativeRoute.GetFilePathWithExtension(path.PathString, extension);
+			if (result is not IRelativeFilePathExt relative)
+			{
+				throw new Exception();
+			}
+			return relative;
 		}
 
 		public static IAbsoluteFilePathExt WithExtension(this IAbsoluteFilePath path, FileExtension extension)
 		{
-			return path.AbsoluteRoute.GetFilePathWithExtension(path.PathString, extension);
+			var result = path.AbsoluteRoute.GetFilePathWithExtension(path.PathString, extension);
+			if (result is not IAbsoluteFilePathExt absolute)
+			{
+				throw new Exception();
+			}
+			return absolute;
 		}
 
 		/// <summary>
