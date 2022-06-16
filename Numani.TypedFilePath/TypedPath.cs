@@ -20,7 +20,7 @@ namespace Numani.TypedFilePath
 			Func<string, FileExtension, IFilePath> withExt)
 		{
 			// パス末尾のスラッシュなどがあれば、それを外したものをファイルパスとして扱う
-			if (Path.EndsInDirectorySeparator(pathString))
+			if (EndsInDirectorySeparator(pathString))
 			{
 				pathString.TrimEnd(Path.DirectorySeparatorChar);
 			}
@@ -66,7 +66,7 @@ namespace Numani.TypedFilePath
 				: RelativeRoute.Instance;
 
 			// パス末尾にスラッシュが無ければ、それを付与したものをディレクトリパスとして扱う
-			if (!Path.EndsInDirectorySeparator(pathString))
+			if (!EndsInDirectorySeparator(pathString))
 			{
 				pathString += Path.DirectorySeparatorChar;
 			}
@@ -76,7 +76,7 @@ namespace Numani.TypedFilePath
 
 		public static IFileSystemPath AsAnyPath(this string pathString)
 		{
-			IFileSystemPath result = Path.EndsInDirectorySeparator(pathString)
+			IFileSystemPath result = EndsInDirectorySeparator(pathString)
 				? AsDirectoryPath(pathString)
 				: AsFilePath(pathString);
 
@@ -87,6 +87,12 @@ namespace Numani.TypedFilePath
 		{
 			var path = Directory.GetCurrentDirectory();
 			return new AbsoluteDirectoryPath(path);
+		}
+
+		private static bool EndsInDirectorySeparator(string path)
+		{
+			return path.EndsWith(Path.DirectorySeparatorChar)
+				|| path.EndsWith(Path.AltDirectorySeparatorChar);
 		}
 	}
 }
