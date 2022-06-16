@@ -75,5 +75,37 @@ namespace Numani.TypedFilePath
 		{
 			return path.PathBase.AsFilePath(path.AbsoluteRoute);
 		}
+
+		/// <summary>
+		/// ファイルパスの末尾から拡張子をすべて取り除いたパスを返します。
+		/// </summary>
+		/// <param name="path"></param>
+		/// <returns></returns>
+		public static IRelativeFilePath WithoutExtensions(this IRelativeFilePathExt path)
+		{
+			var newPath = path.WithoutExtension();
+			if (newPath is IRelativeFilePathExt withExt)
+			{
+				return WithoutExtensions(withExt);
+			}
+
+			return newPath;
+		}
+
+		/// <summary>
+		/// ファイルパスの末尾から拡張子をすべて取り除いたパスを返します。
+		/// </summary>
+		/// <param name="path"></param>
+		/// <returns></returns>
+		public static IAbsoluteFilePath WithoutExtensions(this IAbsoluteFilePathExt path)
+		{
+			var newPath = path.WithoutExtension();
+			if (newPath is IAbsoluteFilePathExt withExt)
+			{
+				return WithoutExtensions(withExt);
+			}
+
+			return newPath;
+		}
 	}
 }

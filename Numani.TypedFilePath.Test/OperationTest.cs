@@ -90,5 +90,23 @@ namespace Numani.TypedFilePath.Test
 			var expected = new RelativeFilePathExt(@"hoge\fuga", new FileExtension(".json"));
 			Assert.Equal(expected, file.WithoutExtension());
 		}
+
+		[Fact]
+		public void 拡張子付き絶対ファイルパスから拡張子をすべて取り除ける()
+		{
+			IRelativeFilePathExt file =
+				new RelativeFilePathExt(@"C:\hoge\fuga.json", new FileExtension(".json"));
+			var expected = new RelativeFilePath(@"C:\hoge\fuga");
+			Assert.Equal(expected, file.WithoutExtensions());
+		}
+
+		[Fact]
+		public void 拡張子付き相対ファイルパスから拡張子をすべて取り除ける()
+		{
+			IRelativeFilePathExt file =
+				new RelativeFilePathExt(@"hoge\fuga.json", new FileExtension(".json"));
+			var expected = new RelativeFilePath(@"hoge\fuga");
+			Assert.Equal(expected, file.WithoutExtensions());
+		}
 	}
 }
