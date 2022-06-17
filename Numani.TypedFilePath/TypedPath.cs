@@ -7,6 +7,11 @@ namespace Numani.TypedFilePath
 {
 	public static partial class TypedPath
 	{
+		/// <summary>
+		/// パス文字列をファイルパスとして型つきファイルパスに変換します。
+		/// </summary>
+		/// <param name="pathString">パス文字列。</param>
+		/// <returns>ファイルパスであることが保証されたパス。</returns>
 		public static IFilePath AsFilePath(this string pathString)
 		{
 			return Path.IsPathRooted(pathString)
@@ -14,26 +19,50 @@ namespace Numani.TypedFilePath
 				: AsFilePath(pathString, RelativeRoute.Instance);
 		}
 
-		private static IFilePath AsFilePath
-			(this string pathString,
-			Func<string, IFilePath> noExt,
-			Func<string, FileExtension, IFilePath> withExt)
+		/// <summary>
+		/// パス文字列をディレクトリパスとして型つきファイルパスに変換します。
+		/// </summary>
+		/// <param name="pathString">パス文字列。</param>
+		/// <returns>ディレクトリパスであることが保証されたパス。</returns>
+		public static IDirectoryPath AsDirectoryPath(this string pathString)
 		{
-			// パス末尾のスラッシュなどがあれば、それを外したものをファイルパスとして扱う
-			if (EndsInDirectorySeparator(pathString))
+			RoutingBase routingBase = Path.IsPathRooted(pathString)
+				? AbsoluteRoute.Instance
+				: RelativeRoute.Instance;
+
+			// パス末尾にスラッシュが無ければ、それを付与したものをディレクトリパスとして扱う
+			if (!EndsInDirectorySeparator(pathString))
 			{
-				pathString.TrimEnd(Path.DirectorySeparatorChar);
+				pathString += Path.DirectorySeparatorChar;
 			}
 
-			if (!Path.HasExtension(pathString))
-			{
-				return noExt(pathString);
-			}
-			
-			var ext = new FileExtension(Path.GetExtension(pathString));
-			var baseName = pathString.Replace(ext.WithDot, "");
-			return withExt(baseName, ext);
+			return routingBase.GetDirectoryPath(pathString);
 		}
+
+		/// <summary>
+		/// パス文字列の末尾がディレクトリ区切り記号であるかどうかに基づいて、パス文字列を型つきファイルパスに変換します。
+		/// </summary>
+		/// <param name="pathString">パス文字列</param>
+		/// <returns>パス文字列の末尾がディレクトリ区切り記号であれば IDirectoryPath。そうでなければ IFilePath。</returns>
+		public static IFileSystemPath AsAnyPath(this string pathString)
+		{
+			IFileSystemPath result = EndsInDirectorySeparator(pathString)
+				? AsDirectoryPath(pathString)
+				: AsFilePath(pathString);
+
+			return result;
+		}
+
+		/// <summary>
+		/// アプリケーションのカレントディレクトリのパスを取得します。
+		/// </summary>
+		/// <returns>カレントディレクトリのパス。</returns>
+		public static IAbsoluteDirectoryPath GetCurrentDirectory()
+		{
+			var path = Directory.GetCurrentDirectory();
+			return new AbsoluteDirectoryPath(path);
+		}
+
 		internal static IFilePath AsFilePath(this string pathString, RoutingBase routingBase)
 		{
 			return AsFilePath(pathString, routingBase.GetFilePath, routingBase.GetFilePathWithExtension);
@@ -59,40 +88,31 @@ namespace Numani.TypedFilePath
 			return absolute;
 		}
 
-		public static IDirectoryPath AsDirectoryPath(this string pathString)
-		{
-			RoutingBase routingBase = Path.IsPathRooted(pathString)
-				? AbsoluteRoute.Instance
-				: RelativeRoute.Instance;
-
-			// パス末尾にスラッシュが無ければ、それを付与したものをディレクトリパスとして扱う
-			if (!EndsInDirectorySeparator(pathString))
-			{
-				pathString += Path.DirectorySeparatorChar;
-			}
-
-			return routingBase.GetDirectoryPath(pathString);
-		}
-
-		public static IFileSystemPath AsAnyPath(this string pathString)
-		{
-			IFileSystemPath result = EndsInDirectorySeparator(pathString)
-				? AsDirectoryPath(pathString)
-				: AsFilePath(pathString);
-
-			return result;
-		}
-
-		public static IAbsoluteDirectoryPath GetCurrentDirectory()
-		{
-			var path = Directory.GetCurrentDirectory();
-			return new AbsoluteDirectoryPath(path);
-		}
-
 		private static bool EndsInDirectorySeparator(string path)
 		{
 			return path.EndsWith(Path.DirectorySeparatorChar)
 				|| path.EndsWith(Path.AltDirectorySeparatorChar);
+		}
+
+		private static IFilePath AsFilePath
+			(this string pathString,
+			Func<string, IFilePath> noExt,
+			Func<string, FileExtension, IFilePath> withExt)
+		{
+			// パス末尾のスラッシュなどがあれば、それを外したものをファイルパスとして扱う
+			if (EndsInDirectorySeparator(pathString))
+			{
+				pathString.TrimEnd(Path.DirectorySeparatorChar);
+			}
+
+			if (!Path.HasExtension(pathString))
+			{
+				return noExt(pathString);
+			}
+
+			var ext = new FileExtension(Path.GetExtension(pathString));
+			var baseName = pathString.Replace(ext.ExtensionString, "");
+			return withExt(baseName, ext);
 		}
 	}
 }
