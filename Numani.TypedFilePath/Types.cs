@@ -12,7 +12,7 @@ namespace Numani.TypedFilePath
 
 	internal record PathWithExtension(string PathBase, FileExtension Extension)
 	{
-		public string PathString => PathBase + Extension.WithDot;
+		public string PathString => PathBase + Extension.ExtensionString;
 	}
 
 	internal record RelativeFilePathExt(string PathBase, FileExtension Extension)
