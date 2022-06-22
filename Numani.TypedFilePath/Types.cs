@@ -1,19 +1,30 @@
-﻿using Numani.TypedFilePath.Interfaces;
+﻿using Numani.TypedFilePath.Infrastructure;
+using Numani.TypedFilePath.Interfaces;
 
 namespace Numani.TypedFilePath
 {
-	internal record RelativeDirectoryPath(string PathString) : IRelativeDirectoryPath;
+	internal record FormattedPath(string PathString)
+	{
+		public string PathString { get; } = PathString
+			.ReplaceSeparator()
+			.TrimTailingSeparator()
+			.TrimCurrentDirectoryHeader();
+	}
 
-	internal record AbsoluteDirectoryPath(string PathString) : IAbsoluteDirectoryPath;
+	internal record RelativeDirectoryPath(string PathString)
+		: FormattedPath(PathString), IRelativeDirectoryPath;
 
-	internal record RelativeFilePath(string PathString) : IRelativeFilePath;
+	internal record AbsoluteDirectoryPath(string PathString)
+		: FormattedPath(PathString), IAbsoluteDirectoryPath;
 
-	internal record AbsoluteFilePath(string PathString) : IAbsoluteFilePath;
+	internal record RelativeFilePath(string PathString)
+		: FormattedPath(PathString), IRelativeFilePath;
+
+	internal record AbsoluteFilePath(string PathString)
+		: FormattedPath(PathString), IAbsoluteFilePath;
 
 	internal record PathWithExtension(string PathBase, FileExtension Extension)
-	{
-		public string PathString => PathBase + Extension.ExtensionString;
-	}
+		: FormattedPath(PathBase + Extension.ExtensionString);
 
 	internal record RelativeFilePathExt(string PathBase, FileExtension Extension)
 		: PathWithExtension(PathBase, Extension), IRelativeFilePathExt;

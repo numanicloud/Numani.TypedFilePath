@@ -12,7 +12,7 @@ namespace Numani.TypedFilePath.Interfaces
 		/// <summary>
 		/// ディレクトリパスを表す文字列を、末尾にパス区切り記号がついた状態で返します。
 		/// </summary>
-		public string PathStringWithTrailingSlash => PathString + Path.DirectorySeparatorChar;
+		public string PathStringWithTrailingSlash => PathString + Path.AltDirectorySeparatorChar;
 
 		/// <summary>
 		/// ディレクトリパスが指すディレクトリが存在するかどうかの真偽値を返します。

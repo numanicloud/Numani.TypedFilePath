@@ -30,12 +30,6 @@ namespace Numani.TypedFilePath
 				? AbsoluteRoute.Instance
 				: RelativeRoute.Instance;
 
-			// パス末尾にスラッシュが無ければ、それを付与したものをディレクトリパスとして扱う
-			if (!EndsInDirectorySeparator(pathString))
-			{
-				pathString += Path.DirectorySeparatorChar;
-			}
-
 			return routingBase.GetDirectoryPath(pathString);
 		}
 
@@ -99,12 +93,6 @@ namespace Numani.TypedFilePath
 			Func<string, IFilePath> noExt,
 			Func<string, FileExtension, IFilePath> withExt)
 		{
-			// パス末尾のスラッシュなどがあれば、それを外したものをファイルパスとして扱う
-			if (EndsInDirectorySeparator(pathString))
-			{
-				pathString.TrimEnd(Path.DirectorySeparatorChar);
-			}
-
 			if (!Path.HasExtension(pathString))
 			{
 				return noExt(pathString);

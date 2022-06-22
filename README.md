@@ -6,6 +6,11 @@
 
 ![RelativeFilePath, RelativeFilePathExt, AbsoluteFilePath, AbsoluteFilePathExt, RelativeDirectoryPath, AbsoluteDirectoryPath](Documents/types.png)
 
+**Unityからも利用可能です。** 以下のgit urlをPackage Managerで指定してください。
+```
+https://github.com/NumAniCloud/Numani.TypedFilePath.git#upm-v0.1.0
+```
+
 ## 機能
 
 ### TypedPath クラス
