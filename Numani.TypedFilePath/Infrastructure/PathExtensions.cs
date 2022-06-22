@@ -6,12 +6,12 @@ namespace Numani.TypedFilePath.Infrastructure
 	public static class PathExtensions
 	{
 		public static IRelativeDirectoryPath AssertRelativeDirectoryPath(this string path) =>
-			path.AsAnyPath() is not IRelativeDirectoryPath relative
+			path.AsDirectoryPath() is not IRelativeDirectoryPath relative
 				? throw new ArgumentOutOfRangeException($"{path} is not relative directory path.")
 				: relative;
 
 		public static IAbsoluteDirectoryPath AssertAbsoluteDirectoryPath(this string path) =>
-			path.AsAnyPath() is not IAbsoluteDirectoryPath absolute
+			path.AsDirectoryPath() is not IAbsoluteDirectoryPath absolute
 				? throw new ArgumentOutOfRangeException($"{path} is not absolute directory path.")
 				: absolute;
 
