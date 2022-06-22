@@ -9,6 +9,7 @@
 *.user
 *.userosscache
 *.sln.docstates
+*.user.meta
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -339,3 +340,4 @@ ASALocalRun/
 healthchecksdb
 
 NuGetApiKey.txt
+NuGetApiKey.txt.meta
