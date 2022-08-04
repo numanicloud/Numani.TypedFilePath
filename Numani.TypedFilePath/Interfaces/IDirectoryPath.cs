@@ -41,5 +41,11 @@ namespace Numani.TypedFilePath.Interfaces
 			return Directory.EnumerateFiles(PathString)
 				.Select(path => path.AsFilePath(RoutingBaseInfo));
 		}
+
+		public IEnumerable<IDirectoryPath> EnumerateDirectories()
+		{
+			return Directory.EnumerateDirectories(PathString)
+				.Select(path => path.AsDirectoryPath());
+		}
 	}
 }
