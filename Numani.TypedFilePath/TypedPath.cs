@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Numani.TypedFilePath.Infrastructure;
 using Numani.TypedFilePath.Interfaces;
 using Numani.TypedFilePath.Routing;
 
@@ -47,16 +48,6 @@ namespace Numani.TypedFilePath
 			return result;
 		}
 
-		/// <summary>
-		/// アプリケーションのカレントディレクトリのパスを取得します。
-		/// </summary>
-		/// <returns>カレントディレクトリのパス。</returns>
-		public static IAbsoluteDirectoryPath GetCurrentDirectory()
-		{
-			var path = Directory.GetCurrentDirectory();
-			return new AbsoluteDirectoryPath(path);
-		}
-
 		internal static IFilePath AsFilePath(this string pathString, RoutingBase routingBase)
 		{
 			return AsFilePath(pathString, routingBase.GetFilePath, routingBase.GetFilePathWithExtension);
@@ -101,6 +92,24 @@ namespace Numani.TypedFilePath
 			var ext = new FileExtension(Path.GetExtension(pathString));
 			var baseName = pathString.Replace(ext.ExtensionString, "");
 			return withExt(baseName, ext);
+		}
+
+		/// <summary>
+		/// アプリケーションのカレントディレクトリのパスを取得します。
+		/// </summary>
+		/// <returns>カレントディレクトリのパス。</returns>
+		public static IAbsoluteDirectoryPath GetCurrentDirectory()
+		{
+			return Directory.GetCurrentDirectory().AssertAbsoluteDirectoryPath();
+		}
+
+		/// <summary>
+		/// ユーザーの一時ファイルのディレクトリのパスを取得します。
+		/// </summary>
+		/// <returns>一時ファイル ディレクトリのパス。</returns>
+		public static IAbsoluteDirectoryPath GetTemporaryDirectory()
+		{
+			return Path.GetTempPath().AssertAbsoluteDirectoryPath();
 		}
 	}
 }
