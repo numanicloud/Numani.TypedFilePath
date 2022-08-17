@@ -341,3 +341,4 @@ healthchecksdb
 
 NuGetApiKey.txt
 NuGetApiKey.txt.meta
+*.nupkg.meta
