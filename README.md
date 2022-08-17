@@ -8,7 +8,7 @@
 
 **Unityからも利用可能です。** 以下のgit urlをPackage Managerで指定してください。
 ```
-https://github.com/NumAniCloud/Numani.TypedFilePath.git#upm-v0.1.0
+https://github.com/NumAniCloud/Numani.TypedFilePath.git#upm-v1.0.0
 ```
 
 ## 機能
