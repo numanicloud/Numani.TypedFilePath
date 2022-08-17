@@ -6,6 +6,12 @@
 
 ![RelativeFilePath, RelativeFilePathExt, AbsoluteFilePath, AbsoluteFilePathExt, RelativeDirectoryPath, AbsoluteDirectoryPath](Documents/types.png)
 
+## 入手
+
+**NuGet Packageで利用可能です。**
+
+[NuGetページ](https://www.nuget.org/packages/Numani.TypedFilePath/)
+
 **Unityからも利用可能です。** 以下のgit urlをPackage Managerで指定してください。
 ```
 https://github.com/NumAniCloud/Numani.TypedFilePath.git#upm-v1.0.0
