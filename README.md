@@ -43,38 +43,30 @@ https://github.com/NumAniCloud/Numani.TypedFilePath.git#upm-v0.1.0
 
 ## 基本的な使い方
 
-`TypedPath.AsFilePath` メソッドなどを用いてオブジェクトを生成したら、本当に目的の型に解釈されたのかをパターンマッチングを使って確かめてから使います。
+`AssertRelativeFilePathExt` 拡張メソッドなどを用いて、文字列を型付きファイルパスのオブジェクトに変換することができます。
 
 ```csharp
-// 使い方例
-
-// 相対パスだと思っていたのに絶対パスだった場合などにはマッチしないパターンマッチング
-if (TypedPath.AsFilePath(".\\Hoge\\Fuga.txt") is not IRelativeFilePathExt rfpe)
-{
-    // 想定通りに解釈されなかった場合は例外を投げたりできる
-    throw new Exception();
-}
-
-// 想定通りに解釈されたならそれを使っていろいろする
-return rfpe;
+IRelativeFilePathExt path = ".\\Hoge\\Fuga.txt".AssertRelativeFilePathExt();
 ```
 
-一度型つきファイルパスに変換したなら、その後は`型つきファイルパス → 型つきファイルパス`の変換メソッドが豊富に用意されているので、それほどパターンマッチングまみれにならずにコードを書けるかと思います。
+一度型つきファイルパスに変換したなら、その後は`型つきファイルパス → 型つきファイルパス`の変換メソッドを使ってファイルパスを扱うことができます。
+
+また、変換用の拡張メソッドは、文字列の形式が対象の型に合わない場合に例外を発生させます。
+
+```csharp
+// カレントディレクトリからの相対ファイルパスを絶対ファイルパスに変換しようとしているので、例外が投げられる
+IAbsoluteFilePath path = ".\\Hoge\\Fuga.txt".AssertAbsoluteFilePath();
+```
+
+## 機能
 
 ### Combine
 
 型つきファイルパスどうしを結合することができます。
 
 ```csharp
-if (TypedPath.AsDirectoryPath(".\\Hoge\\Fuga") is not IRelativeDirectoryPath dir)
-{
-    throw new Exception();
-}
-
-if (TypedPath.AsFilePath("file.txt") is not IRelativeFilePath file)
-{
-    throw new Exception();
-}
+IRelativeDirectoryPath dir = ".\\Hoge\\Fuga".AssertRelativeDirectoryPath();
+IRelativeFilePath file = "file.txt".AssertRelativeFilePath();
 
 // "./Hoge/Fuga/file.txt" と表示される
 Console.WriteLine(dir.Combine(file).PathString);
@@ -85,11 +77,7 @@ Console.WriteLine(dir.Combine(file).PathString);
 ファイルパスに拡張子を付けたり外したりできます。
 
 ```csharp
-if (TypedPath.AsFilePath("README") is not IRelativeFilePath file)
-{
-    throw new Exception();
-}
-
+var file = "README".AssertRelativeFilePath();
 var withExt = file.WithExtension(new FileExtension(".md"));
 
 // "README.md" と表示される
@@ -97,11 +85,7 @@ Console.WriteLine(withExt.PathString);
 ```
 
 ```csharp
-if (TypedPath.AsFilePath("README.md") is not IRelativeFilePathExt file)
-{
-    throw new Exception();
-}
-
+var file = "README.md".AssertRelativeFilePathExt();
 var without = file.WithoutExtension();
 
 // "README" と表示される
@@ -113,10 +97,7 @@ Console.WriteLine(without.PathString);
 型つきファイルパスから直接ファイルを操作することもできます。
 
 ```csharp
-if (TypedPath.AsFilePath("README.md") is not IRelativeFilePath file)
-{
-    throw new Exception();
-}
+var file = "README.md".AssertRelativeFilePath();
 
 // ファイルが存在するかどうか確認
 if (!file.Exists())
@@ -124,4 +105,22 @@ if (!file.Exists())
     // ファイルを作成する
     using var stream = file.OpenCreate();
 }
+```
+
+### ファイルやディレクトリの列挙
+
+`IDirectoryPath.EnumerateFiles` メソッドを使って、ディレクトリ内のファイルパスを型付きで列挙することができます。
+
+`IDirectoryPath.EnumerateDirectories` メソッドを使って、ディレクトリ内のディレクトリを型付きで列挙することができます。
+
+## パターンマッチング
+
+文字列を型付きファイルパスに変換するとき、失敗した場合に例外を投げる以外の処理をしたいときにはパターンマッチングを使う方法があります。
+
+```csharp
+if ("Readme.md".AsAnyPath() is not IRelativeFilePath relative)
+{
+    return;
+}
+Console.WriteLine(relative.PathString);
 ```
