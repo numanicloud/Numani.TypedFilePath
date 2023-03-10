@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Numani.TypedFilePath.Infrastructure
@@ -19,5 +22,25 @@ namespace Numani.TypedFilePath.Infrastructure
 		{
 			return Regex.Replace(src, @"^\./", "");
 		}
+
+        public static string FlatDoubleDotSegments(this string src)
+        {
+			var split = src.Split('/');
+            var stack = new Stack<string>(split.Length);
+
+            foreach (var item in split)
+            {
+                if (item == ".." && stack.TryPeek(out var peeked) && peeked != "..")
+                {
+                    stack.Pop();
+                }
+                else
+                {
+					stack.Push(item);
+                }
+            }
+
+            return string.Join("/", stack.Reverse());
+        }
 	}
 }

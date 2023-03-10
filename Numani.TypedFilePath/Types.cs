@@ -8,7 +8,8 @@ namespace Numani.TypedFilePath
 		public string PathString { get; } = PathString
 			.ReplaceSeparator()
 			.TrimTailingSeparator()
-			.TrimCurrentDirectoryHeader();
+			.TrimCurrentDirectoryHeader()
+            .FlatDoubleDotSegments();
 	}
 
 	internal record RelativeDirectoryPath(string PathString)
@@ -22,7 +23,7 @@ namespace Numani.TypedFilePath
 
 	internal record AbsoluteFilePath(string PathString)
 		: FormattedPath(PathString), IAbsoluteFilePath;
-
+	
 	internal record PathWithExtension(string PathBase, FileExtension Extension)
 		: FormattedPath(PathBase + Extension.ExtensionString);
 

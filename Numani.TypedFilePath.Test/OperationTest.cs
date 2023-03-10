@@ -108,5 +108,14 @@ namespace Numani.TypedFilePath.Test
 			var expected = new RelativeFilePath(@"hoge/fuga");
 			Assert.Equal(expected, file.WithoutExtensions());
 		}
+
+		[Fact]
+        public void 結合の際に親ディレクトリを辿れる()
+        {
+            IAbsoluteDirectoryPath dir = new AbsoluteDirectoryPath("C:/hoge/fuga");
+            IRelativeFilePath file = new RelativeFilePath("../../file");
+            var actual = dir.Combine(file).PathString;
+			Assert.Equal("C:/file", actual);
+        }
 	}
 }

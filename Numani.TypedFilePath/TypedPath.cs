@@ -80,7 +80,7 @@ namespace Numani.TypedFilePath
 		}
 
 		private static IFilePath AsFilePath
-			(this string pathString,
+			(string pathString,
 			Func<string, IFilePath> noExt,
 			Func<string, FileExtension, IFilePath> withExt)
 		{

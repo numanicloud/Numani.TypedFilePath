@@ -162,7 +162,7 @@ namespace Numani.TypedFilePath
 
 		private static T Combine<T>(IFileSystemPath path1, IFileSystemPath path2, Func<string, IFileSystemPath> builder)
 		{
-			var result = builder.Invoke(Path.Combine(path1.PathString, path2.PathString));
+            var result = builder.Invoke(Path.Combine(path1.PathString, path2.PathString));
 			if (result is not T specific)
 			{
 				throw new Exception();

@@ -143,5 +143,15 @@ namespace Numani.TypedFilePath.Test
 
 			Assert.Equal(expected, actual.PathString);
 		}
+
+		[Theory]
+		[InlineData("hoge/fuga/../piyo", "hoge/piyo")]
+		[InlineData("hoge/fuga/../piyo/", "hoge/piyo")]
+		[InlineData("C:/hoge/../piyo", "C:/piyo")]
+        public void 上位のディレクトリを表すドット2つの部分を実際にさかのぼったパスにする(string path, string expected)
+        {
+            var actual = path.AsAnyPath().PathString;
+			Assert.Equal(expected, actual);
+        }
 	}
 }

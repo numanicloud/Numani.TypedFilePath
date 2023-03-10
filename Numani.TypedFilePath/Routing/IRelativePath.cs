@@ -11,6 +11,8 @@ namespace Numani.TypedFilePath.Routing
 		RoutingBase IFileSystemPath.RoutingBaseInfo => RelativeRoute.Instance;
 		internal RelativeRoute RelativeRoute => RelativeRoute.Instance;
 
+        public string PathStringWithCurrentDirectoryDot => "./" + PathString;
+
 		/// <summary>
 		/// この相対パスの親ディレクトリとなる相対パスを返します。
 		/// </summary>
