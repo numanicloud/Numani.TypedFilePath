@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using Numani.TypedFilePath.Infrastructure;
 
 namespace Numani.TypedFilePath.Interfaces
 {
@@ -30,5 +31,11 @@ namespace Numani.TypedFilePath.Interfaces
 		/// </summary>
 		/// <returns></returns>
 		public FileStream OpenWrite() => File.OpenWrite(PathString);
+
+        public IRelativeFilePath GetLastSegment()
+        {
+            return Path.GetFileName(PathString)
+                .AssertRelativeFilePath();
+        }
 	}
 }

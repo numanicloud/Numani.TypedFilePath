@@ -1,4 +1,6 @@
-﻿using Numani.TypedFilePath.Routing;
+﻿using System.IO;
+using Numani.TypedFilePath.Infrastructure;
+using Numani.TypedFilePath.Routing;
 
 namespace Numani.TypedFilePath.Interfaces
 {
@@ -12,5 +14,16 @@ namespace Numani.TypedFilePath.Interfaces
 		/// </summary>
 		public string PathString { get; }
 		internal RoutingBase RoutingBaseInfo { get; }
+
+		/// <summary>
+		/// このパスの親ディレクトリを表すパスを取得します。
+		/// </summary>
+		/// <returns>親ディレクトリのパス。このパスがルートである場合はnull。</returns>
+        public IDirectoryPath? GetParentPath()
+        {
+			return Directory.GetParent(PathString)
+                ?.FullName
+                .AssertDirectoryPath();
+        }
 	}
 }

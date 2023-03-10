@@ -57,11 +57,14 @@ namespace Numani.TypedFilePath.Infrastructure
 		/// <param name="path"></param>
 		/// <returns></returns>
 		/// <exception cref="ArgumentOutOfRangeException"></exception>
-		public static IRelativeFilePath AssertRelativeFilePath(this string path) =>
-			path.AsAnyPath() as IRelativeFilePath
-			?? throw new ArgumentOutOfRangeException($"{path} is not relative file path.");
+		public static IRelativeFilePath AssertRelativeFilePath(this string path)
+        {
+            var relativeFilePath = path.AsAnyPath() as IRelativeFilePath;
+            return relativeFilePath
+                ?? throw new ArgumentOutOfRangeException($"{path} is not relative file path.");
+        }
 
-		/// <summary>
+        /// <summary>
 		/// 指定された文字列を絶対ファイルパスの型に変換します。変換できない場合、例外を投げます。
 		/// </summary>
 		/// <param name="path"></param>
